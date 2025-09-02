@@ -188,6 +188,9 @@ for comp in novas_composicoes:
                     "insumo_id": insumo["_id"],
                     "coeficiente": coeficiente
                 })
+    print(composicoes_auxiliares[0])
+    print(insumos[0])
+
 
     # Atualiza o documento da composição com os insumos e composicoes auxiliares encontrados
     composicao_doc = composicoes_collection.find_one({"codigo": codigo_principal})
