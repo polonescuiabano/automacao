@@ -3,7 +3,9 @@ from pymongo import MongoClient
 from datetime import datetime
 
 # Conectar ao MongoDB
-client = MongoClient("mongodb://admin:senhaforte@serorc.serpra.com.br:27017/")
+client = MongoClient(
+    "mongodb://admin:3ng3nh4r1427611CPLUSPLUSOP@serorc.serpra.com.br:27017/serorc?authSource=admin"
+)
 db = client['serorc']
 insumos_collection = db['insumos']
 
@@ -11,7 +13,7 @@ insumos_collection = db['insumos']
 data_cotacao = datetime(2024, 12, 1)
 
 # Caminho do Excel
-excel_path = r"C:\Users\gabriel amorim\Downloads\SINAPI_Preco_Ref_Insumos_MT_202412_NaoDesonerado.xlsx"
+excel_path = r"C:\Users\Dell\Downloads\SINAPI_Preco_Ref_Insumos_MT_202412_NaoDesonerado.xlsx"
 df = pd.read_excel(excel_path, sheet_name="sheet1", header=None, skiprows=7, usecols="A,B,C,E")
 
 df.columns = ['codigo', 'nome', 'unidade_medida', 'preco_nao_desonerado']
@@ -29,7 +31,7 @@ for index, row in df.iterrows():
         print(f"Preço inválido na linha {index + 8}. Ignorando.")
         continue
 
-    codigo = row['codigo']
+    codigo = str(row['codigo']).strip()
 
     # Verificar se o insumo já existe
     insumo_existente = insumos_collection.find_one({"codigo": codigo})

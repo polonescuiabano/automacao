@@ -3,7 +3,9 @@ from pymongo import MongoClient
 from datetime import datetime
 
 # Conectar ao MongoDB
-client = MongoClient("mongodb://admin:senhaforte@serorc.serpra.com.br:27017/")
+client = MongoClient(
+    "mongodb://admin:3ng3nh4r1427611CPLUSPLUSOP@serorc.serpra.com.br:27017/serorc?authSource=admin"
+)
 db = client['serorc']
 composicoes_collection = db['composicoes']
 
@@ -36,7 +38,7 @@ def processar_composicoes_excel(caminho_arquivo):
 
         if codigo is not None:
             try:
-                codigo = int(codigo)
+                codigo = str(codigo).strip()
             except ValueError:
                 continue
 
@@ -97,7 +99,7 @@ def processar_composicoes_excel(caminho_arquivo):
 
 
 # Caminho do Excel
-caminho_arquivo = r"C:\Users\gabriel amorim\Downloads\SINAPI_Custo_Ref_Composicoes_Sintetico_MT_202411_NaoDesonerado.xlsx"
+caminho_arquivo = r"C:\Users\Dell\Downloads\SINAPI_Custo_Ref_Composicoes_Sintetico_MT_202411_NaoDesonerado.xlsx"
 
 # Executar
 processar_composicoes_excel(caminho_arquivo)

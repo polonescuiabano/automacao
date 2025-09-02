@@ -6,13 +6,15 @@ import re
 
 
 # Conexão com o MongoDB
-client = MongoClient('mongodb://admin:senhaforte@serorc.serpra.com.br:27017/')
+client = MongoClient(
+    "mongodb://admin:3ng3nh4r1427611CPLUSPLUSOP@serorc.serpra.com.br:27017/serorc?authSource=admin"
+)
 db = client['serorc']
 composicoes_collection = db['composicoes']
 insumos_collection = db['insumos']  # Nome da coleção 'insumos'
 
 # Caminho do arquivo
-excel_path = r"C:\Users\gabriel amorim\Downloads\202501\SINAPI_Referência_2025_01.xlsx"
+excel_path = r"C:\Users\Dell\Downloads\202501\SINAPI_Referência_2025_01.xlsx"
 
 # Data da nova cotação
 data_cotacao = datetime(2025, 1, 1)
@@ -41,7 +43,7 @@ for aba, tipo_preco in abas.items():
         print(f"⚠️ Nenhuma coluna MT encontrada na aba {aba}. Pulando.")
         continue
 
-    for i in range(11, len(df)):
+    for i in range(10, len(df)):
         row = df.iloc[i]
 
         codigo_cell = ws.cell(row=i + 1, column=2)  # Coluna B = 2
@@ -60,8 +62,8 @@ for aba, tipo_preco in abas.items():
             continue
 
         try:
-            codigo = int(str(codigo_val).strip())
-            if codigo == 0:
+            codigo = str(codigo_val).strip()
+            if codigo == "0":
                 continue
         except:
             continue
@@ -75,15 +77,25 @@ for aba, tipo_preco in abas.items():
         preco_valido = None
         for col in colunas_mt:
             preco_raw = row[col]
-            if pd.notna(preco_raw):
-                try:
-                    preco_str = str(preco_raw).strip()
-                    preco_float = float(preco_str)
-                    preco_valido = preco_float
-                    break
-                except:
+
+            if pd.isna(preco_raw):  # ignora se for NaN
+                continue
+
+            try:
+                preco_str = str(preco_raw).strip()
+                if preco_str in ["", "-", "–", "0"]:  # ignora se for string vazia, traço ou zero
                     continue
 
+                preco_float = float(preco_str)
+                if preco_float == 0:  # ignora valores zero numéricos
+                    continue
+
+                preco_valido = preco_float
+                break
+            except:
+                continue
+
+        # Se nenhum valor válido foi encontrado, pula a linha
         if preco_valido is None:
             continue
 
@@ -137,7 +149,7 @@ print("✅ Processamento de composições finalizado com sucesso.")
 df_analitico = pd.read_excel(excel_path, sheet_name="Analítico", header=None, engine='openpyxl')
 
 for comp in novas_composicoes:
-    codigo_principal = comp["codigo"]
+    codigo_principal = str(comp["codigo"]).strip()
 
     # Filtra todas as linhas que têm esse código na coluna B (índice 1)
     linhas_relacionadas = df_analitico[df_analitico[1] == codigo_principal]
@@ -158,7 +170,8 @@ for comp in novas_composicoes:
             continue  # pula se faltar dados importantes
 
         try:
-            codigo_item = int(codigo_item)
+            codigo_item = str(codigo_item).strip()
+            print(codigo_item)
             coeficiente = float(str(coeficiente))
         except:
             continue  # se falhar na conversão, pula

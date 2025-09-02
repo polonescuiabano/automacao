@@ -3,7 +3,9 @@ from pymongo import MongoClient
 from datetime import datetime
 
 # Conectar ao MongoDB
-client = MongoClient('mongodb://admin:senhaforte@serorc.serpra.com.br:27017/')
+client = MongoClient(
+    "mongodb://admin:3ng3nh4r1427611CPLUSPLUSOP@serorc.serpra.com.br:27017/serorc?authSource=admin"
+)
 db = client['serorc']
 insumos_collection = db['insumos']
 
@@ -11,7 +13,7 @@ insumos_collection = db['insumos']
 data_cotacao = datetime(2025, 1, 1)
 
 # Caminho do arquivo
-excel_path = r"C:\Users\gabriel amorim\Downloads\202501\SINAPI_Referência_2025_01.xlsx"
+excel_path = r"C:\Users\Dell\Downloads\202501\SINAPI_Referência_2025_01.xlsx"
 
 abas = {
     'ICD': 'preco_desonerado',
@@ -34,7 +36,7 @@ for aba, tipo_preco in abas.items():
     for i in range(10, len(df)):
         row = df.iloc[i]
 
-        codigo = row[1]
+        codigo = str(row[1]).strip()
         nome = str(row[2]).strip()
         unidade = str(row[3]).strip()
 

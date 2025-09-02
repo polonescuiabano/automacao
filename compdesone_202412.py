@@ -3,7 +3,9 @@ from pymongo import MongoClient
 from datetime import datetime
 
 # Conexão com MongoDB
-client = MongoClient("mongodb://admin:senhaforte@serorc.serpra.com.br:27017/")
+client = MongoClient(
+    "mongodb://admin:3ng3nh4r1427611CPLUSPLUSOP@serorc.serpra.com.br:27017/serorc?authSource=admin"
+)
 db = client['serorc']
 composicoes_collection = db['composicoes']
 
@@ -38,7 +40,7 @@ def adicionar_precos_desonerados_dez2024(caminho_arquivo):
             continue
 
         try:
-            codigo = int(codigo)
+            codigo = str(codigo).strip()
         except ValueError:
             continue
 
@@ -101,7 +103,7 @@ def adicionar_precos_desonerados_dez2024(caminho_arquivo):
 
 
 # Caminho do Excel com preços desonerados de dezembro
-caminho_excel_desonerado = r"C:\Users\gabriel amorim\Downloads\SINAPI_Custo_Ref_Composicoes_Sintetico_MT_202412_Desonerado.xlsx"
+caminho_excel_desonerado = r"C:\Users\Dell\Downloads\SINAPI_Custo_Ref_Composicoes_Sintetico_MT_202412_Desonerado.xlsx"
 
 # Executar
 adicionar_precos_desonerados_dez2024(caminho_excel_desonerado)
